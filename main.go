@@ -27,7 +27,7 @@ type pbes1Params struct {
 	Iterations int64
 }
 
-func DecryptPBES1(encrypted []byte) ([]byte, error) {
+func DecryptPBES1(encrypted []byte, password []byte) ([]byte, error) {
 	var info encryptedPrivateKeyInfo
 	_, err := asn1.Unmarshal(encrypted, &info)
 	if err != nil {
@@ -51,7 +51,7 @@ func DecryptPBES1(encrypted []byte) ([]byte, error) {
 		md = sha1.New()
 	}
 
-	keyIv, err := pbkdf1([]byte("1f56fd979f58464a7c9082b4d093f403"), pbeParams.Salt, 16, int(pbeParams.Iterations), md)
+	keyIv, err := pbkdf1(password, pbeParams.Salt, 16, int(pbeParams.Iterations), md)
 	if err != nil {
 		panic(err)
 	}
